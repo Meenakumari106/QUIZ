@@ -186,21 +186,36 @@ app.post('/api/quizzes', async (req, res) => {
   }
 });
 
-//to fetch quizes
-app.get('/api/quizzes', async (req, res) => {
-  try {
-    const userId = req.query.userId; // Retrieve userId from query parameter
+// //to fetch quizes
+// app.get('/api/quizzes', async (req, res) => {
+//   try {
+//     const userId = req.query.userId; // Retrieve userId from query parameter
 
-    if (!userId) {
-      return res.status(400).json({ error: 'userId query parameter is required' });
-    }
-    const quizzes = await Quiz.find({ userId: userId }); 
+//     if (!userId) {
+//       return res.status(400).json({ error: 'userId query parameter is required' });
+//     }
+//     const quizzes = await Quiz.find({ userId: userId }); 
     
-    console.log(quizzes)// Retrieve all quizzes from the database
-    res.status(200).json(quizzes); // Return quizzes as JSON response
-  } catch (err) {
-    console.error('Error fetching quizzes:', err);
-    res.status(500).json({ error: 'Failed to fetch quizzes' });
+//     console.log(quizzes)// Retrieve all quizzes from the database
+//     res.status(200).json(quizzes); // Return quizzes as JSON response
+//   } catch (err) {
+//     console.error('Error fetching quizzes:', err);
+//     res.status(500).json({ error: 'Failed to fetch quizzes' });
+//   }
+// });
+
+app.get('/api/quizzes', async (req, res) => {
+  const { title, password } = req.query;
+console.log(title)
+  try {
+    const quiz = await Quiz.findOne({ 'quiz-title':title,'quiz-password':password }); // Adjust according to your schema
+    if (quiz) {
+      res.json(quiz);
+    } else {
+      res.status(404).json({ message: 'Quiz not found or invalid credentials' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
   }
 });
 

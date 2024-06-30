@@ -1,70 +1,116 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const quizData = {
-    title: "Sample Quiz",
-    duration: 600, // 10 minutes in seconds
-    questions: [
-      {
-        text: "What is the capital of France?",
-        type: "multiple-choice",
-        options: ["Paris", "London", "Berlin", "Madrid"],
-      },
-      {
-        text: "The sky is blue.",
-        type: "true-false",
-        options: ["True", "False"],
-      },
-      {
-        text: "Describe the process of photosynthesis.",
-        type: "one-word",
-        options: [],
-      },
-    ],
-  };
+let currentQuestionIndex=0;
+const nextButton = document.getElementById("next-question-btn");
+const prevButton=document.getElementById("prev-question-btn")
+const submitButton = document.getElementById("submit-btn");
 
-  let currentQuestionIndex = 0;
-  const totalQuestions = quizData.questions.length;
+async function fetchQuizzes(quizTitle, password) {
+  try {
+      const response = await fetch(`http://localhost:3000/api/quizzes?title=${encodeURIComponent(quizTitle)}&password=${encodeURIComponent(password)}`); // Replace with your backend URL if different
+      if (!response.ok) {
+          throw new Error('Failed to fetch quizzes');
+      }
+      const quizzes = await response.json();
+      console.log('Quizzes:', quizzes); // Log the fetched quizzes to the console or use them as needed
+      return quizzes;
+  } catch (error) {
+      console.error('Error fetching quizzes:', error);
+      // Handle error scenario (e.g., show an error message to the user)
+      return null; // or throw error for further handling
+  }
+}
 
-  const startQuizButton = document.getElementById("start-quiz-btn");
-  const quizForm = document.getElementById("take-quiz-form");
-  const quizTitleInput = document.getElementById("quiz-title-display");
-  const questionsContainer = document.getElementById(
-    "quiz-questions-container"
-  );
-  const prevButton = document.getElementById("prev-question-btn");
-  const nextButton = document.getElementById("next-question-btn");
-  const submitButton = document.getElementById("submit-btn");
-  const timerDisplay = document.getElementById("timer");
+function displayQuizzes(quizData) {
+
+  
+
   const timeRemainingDisplay = document.getElementById("time-remaining");
 
-  startQuizButton.addEventListener("click", function () {
-    // Simulating quiz access check with title and password
-    const enteredTitle = document.getElementById("quiz-title").value;
-    const enteredPassword = document.getElementById("quiz-password").value;
+ 
+  document.getElementById("quiz-access-form").style.display = "none";
+  document.getElementById("start-quiz-btn").style.display = "none";
+  document.getElementById("take-quiz-form").style.display="block";
+  document.getElementById("quiz-title-display").value=quizData['quiz-title'];
+  // document.getElementById("timer").style.display="block";
+  // document.getElementById("timer").textContent=format(quizData['quiz-time-limit'])
+  // timeRemainingDisplay.style.display="block";
+ 
 
-    if (enteredTitle === quizData.title && enteredPassword === "password") {
-      document.getElementById("quiz-access-form").style.display = "none";
-      startQuizButton.style.display = "none";
-      quizForm.style.display = "block";
-      timerDisplay.style.display = "block";
-      quizTitleInput.value = quizData.title;
-      populateQuizQuestion(quizData, currentQuestionIndex);
-      startTimer(quizData.duration, timeRemainingDisplay);
-    } else {
-      alert("Invalid quiz title or password");
-    }
+    console.log("done")
+    const questionsContainer=document.getElementById("quiz-questions-container");
+    populateQuizQuestion(quizData, currentQuestionIndex,questionsContainer);
+   
+      // startTimer(quizData['quiz-time-limit'], timeRemainingDisplay);
+ 
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const startQuizBtn = document.getElementById('start-quiz-btn');
+
+  startQuizBtn.addEventListener('click', async () => {
+      const quizTitleInput = document.getElementById('quiz-title');
+      const quizPasswordInput = document.getElementById('quiz-password');
+
+      const quizTitle = quizTitleInput.value.trim();
+      const quizPassword = quizPasswordInput.value.trim();
+
+      if (quizTitle === '' || quizPassword === '') {
+          alert('Please enter both Quiz Title and Password');
+          return;
+      }
+
+      try {
+          const quizData = await fetchQuizzes(quizTitle, quizPassword).then(quizzes => {
+            if (quizzes) {
+                 displayQuizzes(quizzes);
+                
+            }
+            console.log("Quizzes fetched and displayed successfully");
+        })
+          // console.log('Quiz Data:', quizData);
+       
+
+      } catch (error) {
+          console.error('Failed to start quiz:', error);
+          alert('Failed to start quiz. Please try again.');
+      }
   });
 
-  function populateQuizQuestion(data, index) {
+
+});
+
+  
+  
+  // startQuizButton.addEventListener("click", function () {
+  //   // Simulating quiz access check with title and password
+  //   const enteredTitle = document.getElementById("quiz-title").value;
+  //   const enteredPassword = document.getElementById("quiz-password").value;
+
+  //   if (enteredTitle === quizData.title && enteredPassword === "password") {
+  //     document.getElementById("quiz-access-form").style.display = "none";
+  //     startQuizButton.style.display = "none";
+  //     quizForm.style.display = "block";
+  //     timerDisplay.style.display = "block";
+  //     quizTitleInput.value = quizData.title;
+  //     populateQuizQuestion(quizData, currentQuestionIndex);
+  //     startTimer(quizData.duration, timeRemainingDisplay);
+  //   } else {
+  //     alert("Invalid quiz title or password");
+  //   }
+  // });
+
+  function populateQuizQuestion(data, index,questionsContainer) {
     questionsContainer.innerHTML = ""; // Clear previous question
 
-    const question = data.questions[index];
+    const question = data.questions[index]['text'];
+    console.log(question)
     const questionHtml = `
           <div class="card mb-3">
               <div class="card-body">
                   <div class="form-group">
-                      <label>Question ${index + 1}: ${question.text}</label>
+                      <label>Question ${index + 1}:${question}</label>
                   </div>
-                  ${generateQuestionOptions(question, index)}
+                  ${generateQuestionOptions(data, index)}
               </div>
           </div>`;
     questionsContainer.insertAdjacentHTML("beforeend", questionHtml);
@@ -72,8 +118,11 @@ document.addEventListener("DOMContentLoaded", function () {
     updateButtonStates();
   }
 
-  function generateQuestionOptions(question, questionIndex) {
-    if (question.type === "multiple-choice") {
+  function generateQuestionOptions(data, questionIndex) {
+
+    if (data.questions[questionIndex]['type'] === "multiple-choice") {
+      const question=data.questions[questionIndex];
+      console.log(question)
       return question.options
         .map(
           (option, index) => `
@@ -126,6 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateButtonStates() {
+    
     prevButton.disabled = currentQuestionIndex === 0;
     nextButton.disabled = currentQuestionIndex === totalQuestions - 1;
     submitButton.style.display =
@@ -171,4 +221,4 @@ document.addEventListener("DOMContentLoaded", function () {
       responses[`questions[${index}]`]
     );
   }
-});
+

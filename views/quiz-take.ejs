@@ -37,7 +37,7 @@
                                 <li><a class="dropdown-item" href="/result">Results</a></li>
                                 <li><a class="dropdown-item" href="/viewsavedquiz">View-Savedquizzes</a></li>
                                 <li><a class="dropdown-item" id="logout-link" href="/">Logout</a></li>
-                               
+
                             </ul>
                         </li>
                     </ul>
@@ -53,28 +53,40 @@
         <form id="quiz-access-form">
             <div class="form-group mb-3 col-sm-12 col-lg-6">
                 <label for="quiz-title">Quiz Title:</label>
-                <input type="text" class="form-control" id="quiz-title" name="quiz-title" placeholder="Enter Quiz Title" required>
+                <input type="text" class="form-control" id="quiz-title" name="quiz-title" placeholder="Enter Quiz Title"
+                    required>
             </div>
             <div class="form-group mb-3 col-sm-12 col-lg-6">
                 <label for="quiz-password">Quiz Password:</label>
-                <input type="password" class="form-control" id="quiz-password" name="quiz-password" placeholder="Enter Quiz Password" required>
+                <input type="password" class="form-control" id="quiz-password" name="quiz-password"
+                    placeholder="Enter Quiz Password" required>
             </div>
             <div id="start-quiz-btn-container">
                 <button id="start-quiz-btn" class="btn btn-primary" type="button">Start Quiz</button>
             </div>
         </form>
         <form id="take-quiz-form" style="display: none;">
+           
+            <div style="display:none">
+                <label for="remain">Quiz-Duration</label>
+                <p id="time-remaining"></p>
+            </div>
+
             <div class="form-group">
                 <label for="quiz-title">Quiz Title:</label>
                 <input type="text" class="form-control" id="quiz-title-display" name="quiz-title" readonly>
             </div>
-            <div id="quiz-questions-container" class="mt-4">
-                
+
+            
+            
+            <div id="quiz-questions-container" class="mt-4" >
+             <!-- <label id="question" style="display: none;">Questions</label> -->
             </div>
             <div class="text-center mt-4">
-                <button id="prev-question-btn" class="btn btn-secondary mr-2" type="button">Previous</button>
-                <button id="next-question-btn" class="btn btn-primary ml-2" type="button">Next</button>
-                <button id="submit-btn" class="btn btn-primary mt-3" type="submit" style="display: none;">Submit Quiz</button>
+                <button id="prev-question-btn" class="btn btn-secondary mr-2" type="button" >Previous</button>
+                <button id="next-question-btn" class="btn btn-primary ml-2" type="button" >Next</button>
+                <button id="submit-btn" class="btn btn-primary mt-3" type="submit" style="display: none;">Submit
+                    Quiz</button>
             </div>
         </form>
     </main>
@@ -85,8 +97,57 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <script src="js/scripts.js"></script>
+    <!-- <script src="js/scripts.js"></script> -->
     <script src="js/quiz-take-script.js"></script>
+    <!-- <script>
+
+        async function fetchQuizzes(quizTitle, password) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/quizzes?title=${encodeURIComponent(quizTitle)}&password=${encodeURIComponent(password)}`); // Replace with your backend URL if different
+                if (!response.ok) {
+                    throw new Error('Failed to fetch quizzes');
+                }
+                const quizzes = await response.json();
+                console.log('Quizzes:', quizzes); // Log the fetched quizzes to the console or use them as needed
+                return quizzes;
+            } catch (error) {
+                console.error('Error fetching quizzes:', error);
+                // Handle error scenario (e.g., show an error message to the user)
+                return null; // or throw error for further handling
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const startQuizBtn = document.getElementById('start-quiz-btn');
+
+            startQuizBtn.addEventListener('click', async () => {
+                const quizTitleInput = document.getElementById('quiz-title');
+                const quizPasswordInput = document.getElementById('quiz-password');
+
+                const quizTitle = quizTitleInput.value.trim();
+                const quizPassword = quizPasswordInput.value.trim();
+
+                if (quizTitle === '' || quizPassword === '') {
+                    alert('Please enter both Quiz Title and Password');
+                    return;
+                }
+
+                try {
+                    const quizData = await fetchQuizzes(quizTitle, quizPassword);
+                    console.log('Quiz Data:', quizData);
+
+
+                } catch (error) {
+                    console.error('Failed to start quiz:', error);
+                    alert('Failed to start quiz. Please try again.');
+                }
+            });
+        });
+
+
+
+
+    </script> -->
 </body>
 
 </html>

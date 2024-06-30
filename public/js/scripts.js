@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("quiz-create-form").addEventListener("submit", handleQuizCreateFormSubmit);
 
     // QUIZ TAKE
-    document.getElementById("take-quiz-form").addEventListener("submit", handleTakeQuizFormSubmit);
+    // document.getElementById("take-quiz-form").addEventListener("submit", handleTakeQuizFormSubmit);
 
     // FORGOT PASSWORD
     document.getElementById("forgot-password-form").addEventListener("submit", handleForgotPasswordFormSubmit);
@@ -178,40 +178,40 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => console.error('Error saving quiz:', error));
       }
 
-    function handleTakeQuizFormSubmit(event) {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        const quizResults = {};
-        // Example quiz data; this should be fetched from the server
-        const quizData = {
-            title: "Sample Quiz",
-            questions: [
-                {
-                    id: 1,
-                    text: "What is the capital of France?",
-                    type: "multiple-choice",
-                    options: ["Paris", "London", "Berlin", "Madrid"],
-                },
-                {
-                    id: 2,
-                    text: "Is the sky blue?",
-                    type: "true-false",
-                },
-                {
-                    id: 3,
-                    text: "Briefly describe photosynthesis.",
-                    type: "short-answer",
-                },
-            ],
-        };
+    // function handleTakeQuizFormSubmit(event) {
+    //     event.preventDefault();
+    //     const formData = new FormData(event.target);
+    //     const quizResults = {};
+    //     // Example quiz data; this should be fetched from the server
+    //     const quizData = {
+    //         title: "Sample Quiz",
+    //         questions: [
+    //             {
+    //                 id: 1,
+    //                 text: "What is the capital of France?",
+    //                 type: "multiple-choice",
+    //                 options: ["Paris", "London", "Berlin", "Madrid"],
+    //             },
+    //             {
+    //                 id: 2,
+    //                 text: "Is the sky blue?",
+    //                 type: "true-false",
+    //             },
+    //             {
+    //                 id: 3,
+    //                 text: "Briefly describe photosynthesis.",
+    //                 type: "short-answer",
+    //             },
+    //         ],
+    //     };
 
-        quizData.questions.forEach((question) => {
-            quizResults[question.id] = formData.get(`question-${question.id}`);
-        });
-        console.log("Quiz Results:", quizResults);
-        // Add code to send this data to the server for scoring and result tracking
-        // Example: You can use fetch or other method to send data to the server
-    }
+    //     quizData.questions.forEach((question) => {
+    //         quizResults[question.id] = formData.get(`question-${question.id}`);
+    //     });
+    //     console.log("Quiz Results:", quizResults);
+    //     // Add code to send this data to the server for scoring and result tracking
+    //     // Example: You can use fetch or other method to send data to the server
+    // }
 
     async function handleForgotPasswordFormSubmit(event) {
         event.preventDefault();
