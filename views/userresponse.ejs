@@ -47,19 +47,18 @@
     </header>
     <main class="container mt-5">
 
-        <div class="form-group mb-3 col-sm-12 col-lg-6">
-            <label for="quiz-title">Quiz Title:</label>
-            <input type="text" class="form-control" id="quiz-title" name="quiz-title" placeholder="Enter Quiz Title"
-                required>
+        <h1>Your Quiz responsees are saved Successfully!</h1>
+        <h2>You can submit this form only once!
+        </h2><p></p> 
+            Contact admin for  any issues</p>
+        <hr>
+        <div id="response-quiz-btn-container" class="flex">
+            <button id="response-btn" class="btn btn-primary" type="button">View Your Answers</button>
+            <a href="/result" id="result-btn" class="btn btn-primary">View results</a>
+
         </div>
-        <div class="form-group mb-3 col-sm-12 col-lg-6">
-            <label for="quiz-password">Quiz Password:</label>
-            <input type="password" class="form-control" id="quiz-password" name="quiz-password"
-                placeholder="Enter Quiz Password" required>
-        </div>
-        <div id="start-quiz-btn-container">
-            <button id="start-quiz-btn" class="btn btn-primary" type="button">View Quizs</button>
-        </div>
+        <div id="view-quiz-result-btn-container">
+    </div>
         <div class="quizlist mt-5 border border-black-300 p-4 rounded-md">
             <ul id="saved-quizzes-list" class="mt-3"></ul>
         </div>

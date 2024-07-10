@@ -46,9 +46,42 @@
         </header>
         <main class="container mt-5">
             <h1>Quiz Results</h1>
+            <hr>
             <div id="quiz-results">
-                <!-- Results will be dynamically populated here -->
-            </div>
+                <div class="form-group mb-3 col-sm-12 col-lg-6">
+                    <label for="quiz-title">Quiz Title:</label>
+                    <input type="text" class="form-control" id="quiz-title" name="quiz-title" placeholder="Enter Quiz Title"
+                        required>
+                </div>
+                <div class="form-group mb-3 col-sm-12 col-lg-6">
+                    <label for="quiz-password">Quiz Password:</label>
+                    <input type="password" class="form-control" id="quiz-password" name="quiz-password"
+                        placeholder="Enter Quiz Password" required>
+                </div>
+                <div class="form-group mb-3 col-sm-12 col-lg-6">
+                    <label for="UserId">UserId</label>
+                    <input type="text" class="form-control" id="userId" name="userId" placeholder="Enter UserId"
+                        required>
+                </div>
+                <div id="start-quiz-btn-container">
+                    <button id="start-quiz-btn" class="btn btn-primary" type="button">Result</button>
+                </div>
+                <hr>
+            </div>  
+            <div id="result-container" style="display: none;">
+                <h1>Your result</h1>
+                <hr>
+                <div id="score-container" class="flex">
+                  <label for="score">SCORE:</label>
+                  <p id="score" style="display: none;"></p>
+                  <label for="Correct">Correct Answers:</label>
+                  <p id="Correct" style="display: none;"></p>
+                  <label for="total">Total Questions:</label>
+                  <p id="total" style="display: none;"></p>
+                </div>
+              </div>
+
+            
         </main>
         <footer class="footer bg-dark text-white text-center py-3">
             <div class="container">

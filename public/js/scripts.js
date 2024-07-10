@@ -302,9 +302,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .addEventListener("submit", handleQuizCreateFormSubmit);
   
     // QUIZ TAKE
-    document
-        .getElementById("take-quiz-form")
-        .addEventListener("submit", handleTakeQuizFormSubmit);
+    // document
+    //     .getElementById("take-quiz-form")
+    //     .addEventListener("submit", handleTakeQuizFormSubmit);
   
     // FORGOT PASSWORD
     document

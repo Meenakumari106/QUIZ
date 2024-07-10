@@ -3,6 +3,7 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 const User = require("./config");
 const Quiz=require("./models/Quiz");
+const QuizResponse = require('./models/QuizResponse');
 
 
 // require('dotenv').config();
@@ -69,6 +70,10 @@ app.get("/viewsavedquiz",(req,res)=>{
 
 app.get("/quiz-saved",(req,res)=>{
   res.render("quiz-saved");
+})
+
+app.get('/userresponse',(req,res)=>{
+  res.render("userresponse")
 })
 
 // Register user
@@ -206,7 +211,7 @@ app.post('/api/quizzes', async (req, res) => {
 
 app.get('/api/quizzes', async (req, res) => {
   const { title, password } = req.query;
-console.log(title)
+// console.log(title)
   try {
     const quiz = await Quiz.findOne({ 'quiz-title':title,'quiz-password':password }); // Adjust according to your schema
     if (quiz) {
@@ -218,6 +223,57 @@ console.log(title)
     res.status(500).json({ message: 'Server error', error });
   }
 });
+
+app.post('/api/submit-quiz', async (req, res) => {
+  try {
+    // const quizResponses = req.body;
+    // console.log('Received quiz responses:', quizResponses);
+    const quizResponses = {
+      'quiz-title': req.body['quiz-title'],
+      userId: req.body['userId'],
+    
+      responses: []
+    };
+    
+    // Iterate over req.body to find all questions
+    Object.keys(req.body).forEach(key => {
+      if (key.startsWith('questions[') && key.endsWith(']')) {
+        const questionId = key.substring('questions['.length, key.length - 1);
+        const answer = req.body[key];
+    
+        quizResponses.responses.push({
+          questionId,
+          answer
+        });
+      }
+    });
+
+    const newQuizResponse = new QuizResponse(quizResponses); // Assuming you have a QuizResponse model
+    await newQuizResponse.save();
+   console.log(newQuizResponse)
+    res.status(200).json({ message: 'Quiz submitted successfully', data: newQuizResponse });
+  } catch (error) {
+    console.error('Error submitting quiz:', error);
+    res.status(500).json({ message: 'Failed to submit quiz', error: error.message });
+  }
+});
+
+app.get('/api/quizresponses',async(req,res)=>{
+  const {id}=req.query;
+  try{
+    const quiz=await QuizResponse.findOne({'userId':id});
+    if (quiz) {
+      res.json(quiz);
+    } else {
+      res.status(404).json({ message: 'QuizResponse not found or invalid title' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+})
+
+
+
 
 
 

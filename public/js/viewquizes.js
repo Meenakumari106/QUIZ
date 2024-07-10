@@ -174,8 +174,8 @@ try {
 
 
 } catch (error) {
-  console.error('Failed to start quiz:', error);
-  alert('Failed to start quiz. Please try again.');
+  console.error('Failed fetch saved quizes', error);
+//   alert('Failed to start quiz. Please try again.');
 }
 });
 

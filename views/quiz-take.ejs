@@ -76,16 +76,19 @@
                 <label for="quiz-title">Quiz Title:</label>
                 <input type="text" class="form-control" id="quiz-title-display" name="quiz-title" readonly>
             </div>
-
+            <div class="form-group">
+                <label for="userId" >UserId:</label>
+                <input type="text" class="form-control" id="userId" name="userId" style="display: none" placeholder="Enter your userId">
+            </div>
             
             
             <div id="quiz-questions-container" class="mt-4" >
              <!-- <label id="question" style="display: none;">Questions</label> -->
             </div>
             <div class="text-center mt-4">
-                <button id="prev-question-btn" class="btn btn-secondary mr-2" type="button" >Previous</button>
+                <!-- <button id="prev-question-btn" class="btn btn-secondary mr-2" type="button" >Previous</button> -->
                 <button id="next-question-btn" class="btn btn-primary ml-2" type="button" >Next</button>
-                <button id="submit-btn" class="btn btn-primary mt-3" type="submit" style="display: none;">Submit
+                <button id="submit-btn" class="btn btn-primary ml-3" type="submit" style="display: none;">Submit
                     Quiz</button>
             </div>
         </form>

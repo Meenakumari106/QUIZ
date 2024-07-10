@@ -1,7 +1,6 @@
 let currentQuestionIndex=0;
-const nextButton = document.getElementById("next-question-btn");
-const prevButton=document.getElementById("prev-question-btn")
-const submitButton = document.getElementById("submit-btn");
+let totalQuestions=0;
+let quizData;
 
 async function fetchQuizzes(quizTitle, password) {
   try {
@@ -19,12 +18,13 @@ async function fetchQuizzes(quizTitle, password) {
   }
 }
 
-function displayQuizzes(quizData) {
+function displayQuizzes(quizzes) {
 
-  
-
+  quizData=quizzes
+  totalQuestions=Object.keys(quizData.questions).length
   const timeRemainingDisplay = document.getElementById("time-remaining");
 
+  const userId=document.getElementById("userId").style.display="block";
  
   document.getElementById("quiz-access-form").style.display = "none";
   document.getElementById("start-quiz-btn").style.display = "none";
@@ -35,7 +35,7 @@ function displayQuizzes(quizData) {
   // timeRemainingDisplay.style.display="block";
  
 
-    console.log("done")
+    // console.log("done")
     const questionsContainer=document.getElementById("quiz-questions-container");
     populateQuizQuestion(quizData, currentQuestionIndex,questionsContainer);
    
@@ -46,6 +46,9 @@ function displayQuizzes(quizData) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const startQuizBtn = document.getElementById('start-quiz-btn');
+  const nextButton = document.getElementById("next-question-btn").addEventListener("click",goToNextQuestion);
+  // const prevButton=document.getElementById("prev-question-btn").addEventListener("click",goToPreviousQuestion)
+  const submitButton = document.getElementById("submit-btn")
 
   startQuizBtn.addEventListener('click', async () => {
       const quizTitleInput = document.getElementById('quiz-title');
@@ -75,32 +78,14 @@ document.addEventListener('DOMContentLoaded', () => {
           alert('Failed to start quiz. Please try again.');
       }
   });
-
+  submitButton.addEventListener("click", submitQuiz);
 
 });
 
   
-  
-  // startQuizButton.addEventListener("click", function () {
-  //   // Simulating quiz access check with title and password
-  //   const enteredTitle = document.getElementById("quiz-title").value;
-  //   const enteredPassword = document.getElementById("quiz-password").value;
-
-  //   if (enteredTitle === quizData.title && enteredPassword === "password") {
-  //     document.getElementById("quiz-access-form").style.display = "none";
-  //     startQuizButton.style.display = "none";
-  //     quizForm.style.display = "block";
-  //     timerDisplay.style.display = "block";
-  //     quizTitleInput.value = quizData.title;
-  //     populateQuizQuestion(quizData, currentQuestionIndex);
-  //     startTimer(quizData.duration, timeRemainingDisplay);
-  //   } else {
-  //     alert("Invalid quiz title or password");
-  //   }
-  // });
 
   function populateQuizQuestion(data, index,questionsContainer) {
-    questionsContainer.innerHTML = ""; // Clear previous question
+    // questionsContainer.innerHTML = ""; // Clear previous question
 
     const question = data.questions[index]['text'];
     console.log(question)
@@ -115,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>`;
     questionsContainer.insertAdjacentHTML("beforeend", questionHtml);
 
-    updateButtonStates();
+    //updateButtonStates();
   }
 
   function generateQuestionOptions(data, questionIndex) {
@@ -154,71 +139,101 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function startTimer(duration, display) {
-    let timer = duration,
-      minutes,
-      seconds;
-    const interval = setInterval(function () {
-      minutes = parseInt(timer / 60, 10);
-      seconds = parseInt(timer % 60, 10);
+  // function startTimer(duration, display) {
+  //   let timer = duration,
+  //     minutes,
+  //     seconds;
+  //   const interval = setInterval(function () {
+  //     minutes = parseInt(timer / 60, 10);
+  //     seconds = parseInt(timer % 60, 10);
 
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+  //     minutes = minutes < 10 ? "0" + minutes : minutes;
+  //     seconds = seconds < 10 ? "0" + seconds : seconds;
 
-      display.textContent = minutes + ":" + seconds;
+  //     display.textContent = minutes + ":" + seconds;
 
-      if (--timer < 0) {
-        clearInterval(interval);
-        quizForm.submit();
-      }
-    }, 1000);
-  }
+  //     if (--timer < 0) {
+  //       clearInterval(interval);
+  //       quizForm.submit();
+  //     }
+  //   }, 1000);
+  // }
 
-  function updateButtonStates() {
+  // function updateButtonStates() {
     
-    prevButton.disabled = currentQuestionIndex === 0;
-    nextButton.disabled = currentQuestionIndex === totalQuestions - 1;
-    submitButton.style.display =
-      currentQuestionIndex === totalQuestions - 1 ? "block" : "none";
-  }
+  //   prevButton.disabled = currentQuestionIndex === 0;
+  //   nextButton.disabled = currentQuestionIndex === totalQuestions - 1;
+  //   submitButton.style.display =
+  //     currentQuestionIndex === totalQuestions - 1 ? "block" : "none";
+  // }
 
   function goToNextQuestion() {
-    saveUserResponse(currentQuestionIndex);
+    //saveUserResponse(currentQuestionIndex);
     if (currentQuestionIndex < totalQuestions - 1) {
+      // console.log(totalQuestions)
       currentQuestionIndex++;
-      populateQuizQuestion(quizData, currentQuestionIndex);
+      // console.log(currentQuestionIndex)
+      // populateQuizQuestion(quizData, currentQuestionIndex);
+      const questionsContainer = document.getElementById("quiz-questions-container");
+      if (questionsContainer) {
+        populateQuizQuestion(quizData, currentQuestionIndex, questionsContainer);
+      } else {
+        console.error('Quiz questions container not found.');
+      }
+    }
+    else{
+        document.getElementById("submit-btn").style.display="block";
     }
   }
 
-  function goToPreviousQuestion() {
-    saveUserResponse(currentQuestionIndex);
-    if (currentQuestionIndex > 0) {
-      currentQuestionIndex--;
-      populateQuizQuestion(quizData, currentQuestionIndex);
-    }
-  }
+  // function goToPreviousQuestion() {
+  //   // saveUserResponse(currentQuestionIndex);
+  //   if (currentQuestionIndex > 0) {
+  //     currentQuestionIndex--;
+  //     // populateQuizQuestion(quizData, currentQuestionIndex);
+  //     const questionsContainer = document.getElementById("quiz-questions-container");
+  //     if (questionsContainer) {
+  //       populateQuizQuestion(quizData, currentQuestionIndex, questionsContainer);
+  //     } else {
+  //       console.error('Quiz questions container not found.');
+  //     }
+  //   }
+  // }
 
-  prevButton.addEventListener("click", goToPreviousQuestion);
-  nextButton.addEventListener("click", goToNextQuestion);
-
-  quizForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    saveUserResponse(currentQuestionIndex);
-    const formData = new FormData(this);
-    const quizResponses = Object.fromEntries(formData.entries());
-    console.log("Quiz Responses:", quizResponses);
-    // Add code to handle quiz submission, e.g., send to server
-  });
-
-  function saveUserResponse(index) {
+  function submitQuiz(event) {
+    event.preventDefault(); // Prevent form from submitting the default way
+  
+    const userId = document.getElementById('userId').value;
+    const quizForm = document.getElementById('take-quiz-form');
     const formData = new FormData(quizForm);
-    const responses = Object.fromEntries(formData.entries());
-    // Depending on your needs, you may want to store responses differently or validate them.
-    console.log(
-      "Saved response for question",
-      index + 1,
-      ":",
-      responses[`questions[${index}]`]
-    );
+    formData.append('userId', userId);
+    const quizResponses = Object.fromEntries(formData.entries());
+  
+    console.log("Quiz responses:", quizResponses);
+  
+    // Example: Send the responses to the server
+    fetch('http://localhost:3000/api/submit-quiz', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(quizResponses)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to submit quiz');
+        }
+        return response.json();
+      })
+      .then(result => {
+        console.log('Quiz submitted successfully:', result);
+        // Redirect or show a success message
+        alert('Quiz submitted successfully!');
+        window.location.href = '/userresponse';
+      })
+      .catch(error => {
+        console.error('Error submitting quiz:', error);
+        alert('Failed to submit quiz. Please try again.');
+      });
   }
 
